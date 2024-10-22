@@ -1,22 +1,34 @@
 
-function calcularAlquiler(tipoAlquiler, param) {
-
-    let importe;
-    let ganancia;
-
+function calcularImporte(tipoAlquiler, parametrosAlquiler) {
     if (tipoAlquiler === 'h') {
-        const horas = parseFloat(param);
-        importe = horas * 99;
+        const costoPorHora = 99;
+        return parametrosAlquiler * costoPorHora;
     } else if (tipoAlquiler === 'k') {
-        const km = parseFloat(param);
-        importe = 100 + (km * 10);
+        const costoBase = 100;
+        const costoPorKilometro = 10;
+        return costoBase + (parametrosAlquiler * costoPorKilometro);
     } else {
-        console.log('Usa "h" para horas de alquiler o "k" para kilómetros recorridos.');
-        return;
+        throw new Error('Tipo de alquiler no válido. Use "h" para horas o "k" para kilómetros.');
     }
+}
 
-    ganancia = importe * 0.45;
+function calcularGanancia(importe) {
+    return importe * 0.45;
+}
 
+function manejarEntradaSalida() {
+    const tipoAlquiler = process.argv[2];
+    const parametrosAlquiler = parseFloat(process.argv[3]);
 
-    console.log(`Importe total: $${importe.toFixed(2)}, '&&', 'Ganancia: $${ganancia.toFixed(2)}');
-  };
+    try {
+        const importe = calcularImporte(tipoAlquiler, parametrosAlquiler);
+        const ganancia = calcularGanancia(importe);
+
+        console.log(`importe:${importe.toFixed(2)} & ganancia:${ganancia.toFixed(2)}`);
+    } catch (error) {
+        console.error(error.message);
+        process.exit(1);
+    }
+}
+
+manejarEntradaSalida();
